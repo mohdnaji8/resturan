@@ -84,15 +84,6 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-//        $file= $request->file('image');
-//        $filename= date('YmdHi').$file->getClientOriginalName();
-//        $file-> move(public_path('Image'), $filename);
-//        $category = Category::find($id);
-//        $category->update([
-//            'name'=>$request->name,
-//            'image'=>$filename,
-//            'description'=>$request->description
-//        ]);
         $data = $request->all();
         $image = $request->file('image');
         if ($request->hasFile('image'))

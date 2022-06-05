@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MenuController extends Controller
 {
@@ -28,8 +29,8 @@ class MenuController extends Controller
     public function create()
     {
         $menu = new Menu();
-        $categories = $menu->cateogries();
-        return view('admin.menus.create')->with('categories',$categories);
+        $categoriess = Category::all();
+        return view('admin.menus.create')->with('categoriess',$categoriess);
     }
 
     /**
@@ -40,7 +41,14 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
-        Menu::create($request->all());
+        $image = $request->file('image');
+        $data = $request->all();
+        if ($request->hasFile('image'))
+        {
+            $filename= $image->store('menus','public');
+            $data['image'] = $filename;
+        }
+        Menu::create($data);
         return redirect()->route('admin.menus.index')->with('success','menu added');
     }
 
@@ -84,8 +92,10 @@ class MenuController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Menu $menu)
     {
-        //
+        Storage::disk('public')->delete($menu->image);
+        $menu->delete();
+        return redirect()->route('admin.menus.index')->with('message','Menu Deleted');
     }
 }
