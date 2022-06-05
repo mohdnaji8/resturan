@@ -40,7 +40,8 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Menu::create($request->all());
+        return redirect()->route('admin.menus.index')->with('success','menu added');
     }
 
     /**
